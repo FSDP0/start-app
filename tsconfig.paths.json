@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "paths": {
+            "@common/*": [
+                "./src/common/*"
+            ],
+            "@global/*": [
+                "./src/global/*"
+            ],
+            "@root/*": [
+                "./src/*"
+            ]
+        }
+    }
+}
