@@ -23,6 +23,16 @@ const ENV_DIR_PATH = `${process.cwd()}/env`;
     UserModule,
     BoardModule,
     AuthModule
+  ],
+  providers: [
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: RoleGuard
+    // }
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: HttpExceptionFilter
+    // }
   ]
 })
 export class AppModule {}

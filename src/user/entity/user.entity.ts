@@ -1,3 +1,4 @@
+import { Role } from "@app/enum/role.enum";
 import { UserReadDto } from "@user/dto/read-user.dto";
 import { UUID } from "crypto";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
@@ -18,6 +19,9 @@ export class User {
 
   @Column()
   userPassword: string;
+
+  @Column({ type: "enum", enum: Role })
+  userRole: Role;
 
   @Column()
   useYN: boolean;

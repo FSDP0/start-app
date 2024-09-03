@@ -1,16 +1,33 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 import type { Request } from "express";
+
+import { DECORATOR_CONSTANTS } from "@app/constants/decorator.constant";
+
+const {
+  PUBLIC: { IS_PUBLIC_KEY }
+} = DECORATOR_CONSTANTS;
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly reflector: Reflector
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+      context.getHandler(),
+      context.getClass()
+    ]);
+
+    if (isPublic) {
+      return true;
+    }
+
     const request = context.switchToHttp().getRequest();
 
     const token = this.extractTokenFromHeader(request);
@@ -33,6 +50,10 @@ export class AuthGuard implements CanActivate {
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {
+    if (!request.headers.authorization) {
+      throw new UnauthorizedException();
+    }
+
     const [type, token] = request.headers.authorization.split(" ") ?? [];
 
     return type === "Bearer" ? token : undefined;

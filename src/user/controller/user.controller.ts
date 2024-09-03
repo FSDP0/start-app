@@ -1,3 +1,5 @@
+import { Roles } from "@app/decorators/role.decorator";
+import { Role } from "@app/enum/role.enum";
 import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { UserSaveDto } from "@user/dto/save-user.dto";
@@ -8,6 +10,7 @@ import { UserService } from "@user/service/user.service";
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Roles(Role.ADMIN)
   @Get()
   public findAll() {
     return this.userService.getAll();

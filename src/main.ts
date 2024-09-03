@@ -22,6 +22,10 @@ async function bootstrap() {
     })
   );
 
+  // ! Gateways 또는 Hybrid Application에서 설정 불가
+  // ! Provider 사용 권고
+  // app.useGlobalFilters(new HttpExceptionFilter());
+
   const configService = app.get(ConfigService);
 
   openApiConfig(app);

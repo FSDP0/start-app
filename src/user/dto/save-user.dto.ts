@@ -1,6 +1,7 @@
+import { Role } from "@app/enum/role.enum";
 import { ApiProperty } from "@nestjs/swagger";
 import { User } from "@user/entity/user.entity";
-import { IsBoolean, IsEmail, IsStrongPassword } from "class-validator";
+import { IsBoolean, IsEmail } from "class-validator";
 
 export class UserSaveDto {
   @ApiProperty()
@@ -14,8 +15,11 @@ export class UserSaveDto {
   email: string;
 
   @ApiProperty()
-  @IsStrongPassword()
+  // @IsStrongPassword()
   password: string;
+
+  @ApiProperty({ enum: Role, enumName: "role" })
+  role: Role;
 
   @ApiProperty({ example: true })
   @IsBoolean()
@@ -29,6 +33,7 @@ export class UserSaveDto {
     entity.userEmail = this.email;
     entity.userPassword = this.password;
     entity.useYN = this.isAtive;
+    entity.userRole = this.role;
 
     return entity;
   }

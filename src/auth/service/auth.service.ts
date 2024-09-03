@@ -1,26 +1,39 @@
 import { SignInDto } from "@auth/dto/sign-in.dto";
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { JwtPayload } from "@auth/interfaces/jwt-payload.interface";
+import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { UserService } from "@user/service/user.service";
+import { User } from "@user/entity/user.entity";
+import { UserRepository } from "@user/repository/user.repository";
+import { Response } from "express";
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userService: UserService,
+    private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService
   ) {}
 
-  public async signIn(dto: SignInDto) {
-    const user = await this.userService.getUserById(dto.userId);
+  public async signIn(res: Response, dto: SignInDto) {
+    const user: User = await this.userRepository
+      .findOneByOrFail({ userId: dto.id })
+      .then((entity) => entity)
+      .catch(() => {
+        throw new NotFoundException();
+      });
 
-    if (user.password !== dto.userPassword) {
+    if (user.userPassword !== dto.password) {
       throw new UnauthorizedException();
     }
 
-    const payload = { sub: user.id, username: user.name };
+    const payload: JwtPayload = { sub: user.userId, username: user.userName, role: user.userRole };
 
-    return {
-      access_token: await this.jwtService.signAsync(payload)
-    };
+    const accessToken = await this.jwtService.signAsync(payload);
+
+    res.setHeader("access_token", accessToken);
+
+    res.send({
+      success: true,
+      access_token: accessToken
+    });
   }
 }
