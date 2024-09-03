@@ -1,10 +1,13 @@
-import { Controller, Get, Post, Body, Param, Delete, Put } from "@nestjs/common";
+import { Controller, Get, Post, Body, Param, Delete, Put, UseGuards } from "@nestjs/common";
 import { BoardService } from "../service/board.service";
 import { BoardSaveDto } from "../dto/save-board.dto";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { BoardUpdateDto } from "@board/dto/update-board.dto";
+import { AuthGuard } from "@app/guards/auth.guard";
 
 @ApiTags("[001]. Board REST API ")
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @Controller("boards")
 export class BoardController {
   constructor(private readonly boardService: BoardService) {}

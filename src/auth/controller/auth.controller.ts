@@ -5,8 +5,8 @@ import type { Request, Response } from "express";
 import { Public } from "@app/decorators/public.decorator";
 
 import { SignInDto } from "@auth/dto/sign-in.dto";
-import { AuthGuard } from "@auth/guards/auth.guard";
 import { AuthService } from "@auth/service/auth.service";
+import { AuthGuard } from "@app/guards/auth.guard";
 
 @ApiTags("[003]. Auth REST API")
 @Controller("auth")

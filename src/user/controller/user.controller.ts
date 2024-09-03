@@ -1,7 +1,8 @@
 import { Roles } from "@app/decorators/role.decorator";
 import { Role } from "@app/enum/role.enum";
-import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { AuthGuard } from "@app/guards/auth.guard";
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from "@nestjs/common";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { UserSaveDto } from "@user/dto/save-user.dto";
 import { UserService } from "@user/service/user.service";
 
@@ -9,6 +10,13 @@ import { UserService } from "@user/service/user.service";
 @Controller("users")
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @Get("test")
+  public test() {
+    return "test";
+  }
 
   @Roles(Role.ADMIN)
   @Get()

@@ -1,10 +1,13 @@
-import { SignInDto } from "@auth/dto/sign-in.dto";
-import { JwtPayload } from "@auth/interfaces/jwt-payload.interface";
 import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+
+import { Response } from "express";
+import bcrypt from "bcrypt";
+
+import { SignInDto } from "@auth/dto/sign-in.dto";
+import { JwtPayload } from "@auth/interfaces/jwt-payload.interface";
 import { User } from "@user/entity/user.entity";
 import { UserRepository } from "@user/repository/user.repository";
-import { Response } from "express";
 
 @Injectable()
 export class AuthService {
@@ -21,7 +24,9 @@ export class AuthService {
         throw new NotFoundException();
       });
 
-    if (user.userPassword !== dto.password) {
+    const isMatch: boolean = await bcrypt.compare(dto.password, user.userPassword);
+
+    if (!isMatch) {
       throw new UnauthorizedException();
     }
 

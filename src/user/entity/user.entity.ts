@@ -1,30 +1,42 @@
 import { Role } from "@app/enum/role.enum";
 import { UserReadDto } from "@user/dto/read-user.dto";
 import { UUID } from "crypto";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
+} from "typeorm";
 
 @Entity("tb_user")
 export class User {
   @PrimaryGeneratedColumn("uuid")
   userUUID: UUID;
 
-  @Column()
+  @Column("varchar")
   userId: string;
 
-  @Column()
+  @Column("varchar")
   userName: string;
 
-  @Column()
+  @Column("varchar")
   userEmail: string;
 
-  @Column()
+  @Column({ type: "varchar", length: 255 })
   userPassword: string;
 
   @Column({ type: "enum", enum: Role })
   userRole: Role;
 
-  @Column()
+  @Column("boolean")
   useYN: boolean;
+
+  @CreateDateColumn({ type: "timestamp" })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: "timestamp", nullable: true })
+  modifiedAt: Date;
 
   public toDto() {
     const dto = new UserReadDto();

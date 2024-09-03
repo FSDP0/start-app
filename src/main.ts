@@ -1,10 +1,11 @@
 import { Logger, ValidationPipe, VersioningType } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
+import { ConfigService } from "@nestjs/config";
+import compression from "compression";
 
 import { openApiConfig } from "@app/config/swagger.config";
 
 import { AppModule } from "@root/app.module";
-import { ConfigService } from "@nestjs/config";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -25,6 +26,8 @@ async function bootstrap() {
   // ! Gateways 또는 Hybrid Application에서 설정 불가
   // ! Provider 사용 권고
   // app.useGlobalFilters(new HttpExceptionFilter());
+
+  app.use(compression());
 
   const configService = app.get(ConfigService);
 
