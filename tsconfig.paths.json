@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "paths": {
+            "@global/*": [
+                "./src/global/modules/*"
+            ],
+            "@app/*": [
+                "./src/global/*"
+            ],
+            "@board/*": [
+                "./src/board/*"
+            ],
+            "@auth/*": [
+                "./src/auth/*"
+            ],
+            "@user/*": [
+                "./src/user/*"
+            ],
+            "@root/*": [
+                "./src/*"
+            ]
+        }
+    }
+}
