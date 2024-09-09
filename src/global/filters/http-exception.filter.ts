@@ -1,3 +1,4 @@
+import Exception from "@app/types/exception";
 import { getCurrentDateTime } from "@app/utils/time.util";
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from "@nestjs/common";
 import { Request, Response } from "express";
@@ -12,10 +13,12 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     const status = exception.getStatus();
 
-    response.status(status).json({
+    const payload: Exception.Message = {
       status: status,
       timestamp: getCurrentDateTime(),
       path: request.url
-    });
+    };
+
+    response.status(status).json(payload);
   }
 }

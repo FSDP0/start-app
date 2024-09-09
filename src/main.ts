@@ -25,6 +25,7 @@ async function bootstrap() {
 
   // ! Gateways 또는 Hybrid Application에서 설정 불가
   // ! Provider 사용 권고
+  // app.useGlobalFilters(new TypeOrmExceptionFilter());
   // app.useGlobalFilters(new HttpExceptionFilter());
 
   app.use(compression());

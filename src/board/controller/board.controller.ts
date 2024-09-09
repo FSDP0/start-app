@@ -19,13 +19,14 @@ export class BoardController {
   constructor(private readonly boardService: BoardService) {}
 
   @ApiOperation({ summary: "모든 게시글 조회" })
-  @Roles(Role.ADMIN)
+  @Roles(Role.USER)
   @Get()
   public findAll() {
     return this.boardService.getAll();
   }
 
   @ApiOperation({ summary: "특정 번호 게시글 조회" })
+  @Roles(Role.USER)
   @Get(":id")
   public findBoardById(@Param("id") id: number) {
     return this.boardService.getBoardById(id);
@@ -47,18 +48,21 @@ export class BoardController {
   // }
 
   @ApiOperation({ summary: "새로운 게시글 등록" })
+  @Roles(Role.USER)
   @Post()
   public saveBoard(@Body() dto: BoardSaveDto) {
     return this.boardService.createBoard(dto);
   }
 
   @ApiOperation({ summary: "기존 게시글 갱신" })
+  @Roles(Role.USER)
   @Put(":id")
   public updateBoard(@Param("id") id: number, @Body() dto: BoardUpdateDto) {
     return this.boardService.editBoard(id, dto);
   }
 
   @ApiOperation({ summary: "기존 게시글 삭제" })
+  @Roles(Role.USER)
   @Delete(":id")
   public removeBoard(@Param("id") id: number) {
     return this.boardService.removeBoard(id);

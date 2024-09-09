@@ -21,6 +21,9 @@ export class BoardService {
     return await this.boardRepository.findOneBy({ boardId: id }).then((entity) => entity.toDto());
   }
 
+  /**
+   * @deprecated
+   */
   public async getBoardByIds(ids: number[]) {
     return await this.boardRepository
       .findBy({
