@@ -26,8 +26,8 @@ export class User {
   @Column({ type: "varchar", length: 255 })
   userPassword: string;
 
-  @Column({ type: "enum", enum: Role })
-  userRole: Role;
+  @Column({ type: "enum", enum: Role, array: true })
+  userRole: [Role];
 
   @Column("boolean")
   useYN: boolean;

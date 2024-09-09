@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import bcrypt from "bcrypt";
 
 import { UserSaveDto } from "@user/dto/save-user.dto";
 import { UserRepository } from "@user/repository/user.repository";
-import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class UserService {
@@ -32,5 +32,7 @@ export class UserService {
 
   public async editUser() {}
 
-  public async removeUser() {}
+  public async removeUser(id: string) {
+    return await this.userRepository.delete({ userId: id }).then((result) => result.affected);
+  }
 }

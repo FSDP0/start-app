@@ -1,7 +1,8 @@
 import { Role } from "@app/enum/role.enum";
+import { User } from "@user/entity/user.entity";
 
-export interface JwtPayload {
+export interface JwtPayload extends Pick<User, "userName" | "userRole"> {
   sub: string;
-  username: string;
-  role: Role;
+  userName: string;
+  userRole: [Role];
 }

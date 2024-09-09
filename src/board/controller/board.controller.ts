@@ -1,18 +1,25 @@
 import { Controller, Get, Post, Body, Param, Delete, Put, UseGuards } from "@nestjs/common";
-import { BoardService } from "../service/board.service";
-import { BoardSaveDto } from "../dto/save-board.dto";
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { BoardUpdateDto } from "@board/dto/update-board.dto";
+
+import { Roles } from "@app/decorators/role.decorator";
+import { Role } from "@app/enum/role.enum";
+import { RoleGuard } from "@app/guards/role.guard";
 import { AuthGuard } from "@app/guards/auth.guard";
+
+import { BoardService } from "@board/service/board.service";
+import { BoardSaveDto } from "@board/dto/save-board.dto";
+import { BoardUpdateDto } from "@board/dto/update-board.dto";
 
 @ApiTags("[001]. Board REST API ")
 @ApiBearerAuth()
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard, RoleGuard)
+@UseGuards()
 @Controller("boards")
 export class BoardController {
   constructor(private readonly boardService: BoardService) {}
 
   @ApiOperation({ summary: "모든 게시글 조회" })
+  @Roles(Role.ADMIN)
   @Get()
   public findAll() {
     return this.boardService.getAll();
