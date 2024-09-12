@@ -57,6 +57,14 @@ export class User {
   }
 
   public toDto() {
-    return new UserReadDto(this.userId, this.userName, this.userEmail, this.useYN);
+    const dto = new UserReadDto(
+      this.userId,
+      this.userName,
+      this.userEmail,
+      this.userRole,
+      this.useYN
+    );
+
+    return dto;
   }
 }

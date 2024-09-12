@@ -15,23 +15,6 @@ export class UserReadDto {
   @IsEmail()
   readonly email: string;
 
-  @ApiProperty()
-  @IsBoolean()
-  readonly isActive: boolean;
-
-  constructor(id: string, name: string, email: string, isActive: boolean) {
-    this.id = id;
-    this.name = name;
-    this.email = email;
-    this.isActive = isActive;
-  }
-}
-
-export class AdditionalUserInfo {
-  @ApiProperty({ example: "password" })
-  //   @IsStrongPassword()
-  readonly password: string;
-
   @ApiProperty({ isArray: true, enum: Role, enumName: "role", example: Object.values(Role) })
   @IsEnum(Role, { each: true })
   readonly role: [Role];
@@ -39,4 +22,18 @@ export class AdditionalUserInfo {
   @ApiProperty({ example: true })
   @IsBoolean()
   readonly isActive: boolean;
+
+  constructor(id: string, name: string, email: string, role: [Role], isActive: boolean) {
+    this.id = id;
+    this.name = name;
+    this.email = email;
+    this.role = role;
+    this.isActive = isActive;
+  }
+}
+
+export class AdditionalUserInfo {
+  @ApiProperty({ example: "password" })
+  //   @IsStrongPassword()
+  password: string;
 }

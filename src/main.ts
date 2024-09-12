@@ -1,5 +1,5 @@
 import { Logger, ValidationPipe, VersioningType } from "@nestjs/common";
-import { NestFactory } from "@nestjs/core";
+import { NestApplication, NestFactory } from "@nestjs/core";
 import { ConfigService } from "@nestjs/config";
 import compression from "compression";
 
@@ -8,6 +8,8 @@ import { openApiConfig } from "@app/config/swagger.config";
 import { AppModule } from "@root/app.module";
 
 async function bootstrap() {
+  const logger = new Logger(NestApplication.name);
+
   const app = await NestFactory.create(AppModule);
 
   app.setGlobalPrefix("api", { exclude: ["system/(.*)"] });
@@ -36,6 +38,6 @@ async function bootstrap() {
 
   const port = configService.get<number>("PORT");
 
-  await app.listen(port, () => Logger.log(`===== NestJS Server Running at ${port} =====`));
+  await app.listen(port, () => logger.log(`===== NestJS Server Running at ${port} =====`));
 }
 bootstrap();

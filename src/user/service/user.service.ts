@@ -1,6 +1,9 @@
-import { Injectable, NotFoundException, UnprocessableEntityException } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import bcrypt from "bcrypt";
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  UnprocessableEntityException
+} from "@nestjs/common";
 
 import { UserSaveDto } from "@user/dto/save-user.dto";
 import { UserRepository } from "@user/repository/user.repository";
@@ -8,14 +11,9 @@ import { UserUpdateDto } from "@user/dto/update-user.dto";
 
 @Injectable()
 export class UserService {
-  private readonly SALT: string;
+  private readonly logger = new Logger(UserService.name);
 
-  constructor(
-    private readonly userRepository: UserRepository,
-    private readonly configService: ConfigService
-  ) {
-    this.SALT = this.configService.get<string>("hash.salt");
-  }
+  constructor(private readonly userRepository: UserRepository) {}
 
   public async getAll() {
     return await this.userRepository
@@ -28,10 +26,10 @@ export class UserService {
   }
 
   public async createUser(dto: UserSaveDto) {
-    dto.password = bcrypt.hashSync(dto.password, +this.SALT);
-
     return await this.userRepository.existsBy({ userId: dto.id }).then(async (result) => {
       if (result) {
+        this.logger.error(`이미 존재하는 사용자 ID 입니다 : ${dto.id}`);
+
         throw new UnprocessableEntityException("이미 존재하는 사용자 ID 입니다.");
       } else {
         return await this.userRepository.save(dto.toEntity()).then((entity) => entity.toDto());
@@ -40,8 +38,6 @@ export class UserService {
   }
 
   public async editUser(dto: UserUpdateDto) {
-    dto.password = bcrypt.hashSync(dto.password, +this.SALT);
-
     return await this.userRepository
       .findOneByOrFail({ userId: dto.id })
       .then(
@@ -51,6 +47,8 @@ export class UserService {
             .then((result) => result.affected)
       )
       .catch(() => {
+        this.logger.error(`해당 사용자를 찾을 수 없습니다 : ${dto.id}`);
+
         throw new NotFoundException("해당 사용자를 찾을 수 없습니다.");
       });
   }
