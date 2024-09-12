@@ -24,7 +24,7 @@ export class ApplicationHealthCheckService {
 
   // 0 ~ 1
   private readonly DISK_PATH: string = "C:\\";
-  private readonly DISK_THRESHOLD_PERCENTAGE: number = 0.5;
+  private readonly DISK_THRESHOLD_PERCENTAGE: number = 0.99;
 
   public getDatabaseHealthz() {
     return () => this.typeOrmHealthIndicator.pingCheck("database", { connection: this.dataSource });

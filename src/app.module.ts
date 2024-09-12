@@ -12,7 +12,10 @@ const ENV_DIR_PATH = `${process.cwd()}/env`;
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: [`${ENV_DIR_PATH}/.env`, `${ENV_DIR_PATH}/.env.${process.env.NODE_ENV}`],
+      envFilePath: [
+        `${ENV_DIR_PATH}/.env`,
+        `${ENV_DIR_PATH}/.env.${process.env.NODE_ENV ?? "local"}`
+      ],
       isGlobal: true,
       validationSchema: Joi.object({
         NODE_ENV: Joi.string().valid("local", "development", "production").default("development"),

@@ -1,4 +1,10 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  Logger,
+  UnauthorizedException
+} from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
@@ -12,6 +18,8 @@ const {
 
 @Injectable()
 export class AuthGuard implements CanActivate {
+  private readonly logger = new Logger(AuthGuard.name);
+
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
@@ -28,12 +36,14 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest();
+    const request: Request = context.switchToHttp().getRequest();
 
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
-      throw new UnauthorizedException();
+      this.logger.warn(`토큰이 존재하지 않습니다. : [${request.ip}] - ${request.url}`);
+
+      throw new UnauthorizedException("접근이 거부되었습니다.");
     }
 
     try {
@@ -43,7 +53,9 @@ export class AuthGuard implements CanActivate {
 
       request["user"] = payload;
     } catch {
-      throw new UnauthorizedException();
+      this.logger.warn(`유효하지 않은 토큰값입니다 : [${request.ip}] '${token}'`);
+
+      throw new UnauthorizedException("접근이 거부되었습니다.");
     }
 
     return true;
@@ -51,7 +63,9 @@ export class AuthGuard implements CanActivate {
 
   private extractTokenFromHeader(request: Request): string | undefined {
     if (!request.headers.authorization) {
-      throw new UnauthorizedException();
+      this.logger.warn(`인증받지 않은 사용자의 요청입니다 : [${request.ip}] -> ${request.url}`);
+
+      throw new UnauthorizedException("접근이 거부되었습니다.");
     }
 
     const [type, token] = request.headers.authorization.split(" ") ?? [];

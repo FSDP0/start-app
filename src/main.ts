@@ -34,7 +34,9 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
 
-  openApiConfig(app);
+  if (process.env.NODE_ENV !== "production") {
+    openApiConfig(app);
+  }
 
   const port = configService.get<number>("PORT");
 
