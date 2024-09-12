@@ -12,40 +12,51 @@ import {
 @Entity("tb_user")
 export class User {
   @PrimaryGeneratedColumn("uuid")
-  userUUID: UUID;
+  readonly userUUID: UUID;
 
   @Column("varchar", { unique: true })
-  userId: string;
+  readonly userId: string;
 
   @Column("varchar")
-  userName: string;
+  readonly userName: string;
 
   @Column("varchar")
-  userEmail: string;
+  readonly userEmail: string;
 
   @Column({ type: "varchar", length: 255 })
-  userPassword: string;
+  readonly userPassword: string;
 
   @Column({ type: "enum", enum: Role, array: true })
-  userRole: [Role];
+  readonly userRole: [Role];
 
   @Column("boolean")
-  useYN: boolean;
+  readonly useYN: boolean;
 
   @CreateDateColumn({ type: "timestamp" })
-  createdAt: Date;
+  readonly createdAt: Date;
 
   @UpdateDateColumn({ type: "timestamp", nullable: true })
-  modifiedAt: Date;
+  readonly modifiedAt: Date;
+
+  constructor(
+    userId: string,
+    userName: string,
+    userEmail: string,
+    userPassword: string,
+    userRole: [Role],
+    useYN: boolean,
+    userUUID?: UUID
+  ) {
+    this.userId = userId;
+    this.userName = userName;
+    this.userEmail = userEmail;
+    this.userPassword = userPassword;
+    this.userRole = userRole;
+    this.useYN = useYN;
+    this.userUUID = userUUID;
+  }
 
   public toDto() {
-    const dto = new UserReadDto();
-
-    dto.id = this.userId;
-    dto.name = this.userName;
-    dto.email = this.userEmail;
-    dto.isActive = this.useYN;
-
-    return dto;
+    return new UserReadDto(this.userId, this.userName, this.userEmail, this.useYN);
   }
 }
