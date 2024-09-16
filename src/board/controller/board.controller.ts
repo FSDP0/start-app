@@ -13,7 +13,6 @@ import { BoardUpdateDto } from "@board/dto/update-board.dto";
 @ApiTags("[001]. Board REST API ")
 @ApiBearerAuth()
 @UseGuards(AuthGuard, RoleGuard)
-@UseGuards()
 @Controller("boards")
 export class BoardController {
   constructor(private readonly boardService: BoardService) {}
@@ -31,21 +30,6 @@ export class BoardController {
   public findBoardById(@Param("id") id: number) {
     return this.boardService.getBoardById(id);
   }
-
-  // @ApiOperation({ summary: "특정 번호들의 게시글 조회" })
-  // @ApiQuery({
-  //   name: "ids",
-  //   required: false,
-  //   description: "게시글 번호목록",
-  //   isArray: true,
-  //   type: Number
-  // })
-  // @Get()
-  // public findBoardByIds(
-  //   @Query("ids", new ParseArrayPipe({ items: Number, separator: "," })) ids: number[]
-  // ) {
-  //   return this.boardService.getBoardByIds(ids);
-  // }
 
   @ApiOperation({ summary: "새로운 게시글 등록" })
   @Roles(Role.USER)

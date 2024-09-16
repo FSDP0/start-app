@@ -7,6 +7,9 @@
             "@app/*": [
                 "./src/global/*"
             ],
+            "@product/*": [
+                "./src/product/*"
+            ],
             "@board/*": [
                 "./src/board/*"
             ],

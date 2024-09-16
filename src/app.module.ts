@@ -6,6 +6,7 @@ import { GlobalModule } from "@global/global.module";
 import { UserModule } from "@user/user.module";
 import { BoardModule } from "@board/board.module";
 import { AuthModule } from "@auth/auth.module";
+import { ProductModule } from "@product/product.module";
 
 const ENV_DIR_PATH = `${process.cwd()}/env`;
 
@@ -25,7 +26,8 @@ const ENV_DIR_PATH = `${process.cwd()}/env`;
     GlobalModule,
     UserModule,
     BoardModule,
-    AuthModule
+    AuthModule,
+    ProductModule
   ],
   providers: []
 })
