@@ -72,7 +72,7 @@ export class ProductService {
 
   public async remove(id: number) {
     const { data } = await firstValueFrom(
-      this.httpService.get<ProductReadDto>(`products/${id}`).pipe(
+      this.httpService.delete(`products/${id}`).pipe(
         catchError((error: AxiosError) => {
           this.logger.error("서비스 호출 중 오류가 발생했습니다.", error.response.data);
 
